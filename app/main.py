@@ -11,6 +11,16 @@ from app.services.recompute import preflight, recompute_weekend, weekend_status
 app = FastAPI(title="FantaF1 API")
 Base.metadata.create_all(bind=engine)
 
+from pathlib import Path
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+static_dir = Path(__file__).resolve().parent / "static"
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+@app.get("/", include_in_schema=False)
+def home_page():
+    return FileResponse(static_dir / "index.html")
 
 @app.post("/auth/register", response_model=schemas.TokenOut)
 def register(payload: schemas.RegisterIn, db: Session = Depends(get_db)):
