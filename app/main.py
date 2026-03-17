@@ -1,10 +1,7 @@
 from datetime import datetime
 from fastapi import Depends, FastAPI, HTTPException
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-from pathlib import Path
 
 from app.auth import get_current_user, hash_password, issue_token, require_admin, verify_password
 from app.db import Base, engine, get_db
@@ -13,13 +10,6 @@ from app.services.recompute import preflight, recompute_weekend, weekend_status
 
 app = FastAPI(title="FantaF1 API")
 Base.metadata.create_all(bind=engine)
-static_dir = Path(__file__).resolve().parent / "static"
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
-
-
-@app.get("/", include_in_schema=False)
-def home_page():
-    return FileResponse(static_dir / "index.html")
 
 
 @app.post("/auth/register", response_model=schemas.TokenOut)
@@ -73,91 +63,6 @@ def claim_team(team_id: str, user: models.User = Depends(get_current_user), db: 
     db.add(models.TeamClaim(user_id=user.id, fantasy_team_id=team_id))
     db.commit()
     return {"ok": True}
-
-
-@app.get("/me")
-def me(user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    claim = db.get(models.TeamClaim, user.id)
-    team = db.get(models.FantasyTeam, claim.fantasy_team_id) if claim else None
-    team_drivers = []
-    if claim:
-        drivers = (
-            db.query(models.Driver)
-            .join(models.FantasyTeamDriver, models.FantasyTeamDriver.driver_id == models.Driver.id)
-            .filter(models.FantasyTeamDriver.fantasy_team_id == claim.fantasy_team_id)
-            .all()
-        )
-        team_drivers = [{"id": d.id, "name": f"{d.given_name} {d.family_name}", "code": d.code} for d in drivers]
-
-    return {
-        "id": user.id,
-        "email": user.email,
-        "is_admin": user.is_admin,
-        "claimed_team": {"id": team.id, "name": team.name} if team else None,
-        "team_drivers": team_drivers,
-    }
-
-
-@app.get("/drivers")
-def list_drivers(db: Session = Depends(get_db)):
-    rows = db.query(models.Driver).all()
-    return [
-        {
-            "id": d.id,
-            "code": d.code,
-            "given_name": d.given_name,
-            "family_name": d.family_name,
-            "constructor_id": d.constructor_id,
-            "is_active": d.is_active,
-        }
-        for d in rows
-    ]
-
-
-@app.get("/constructors")
-def list_constructors(db: Session = Depends(get_db)):
-    rows = db.query(models.Constructor).all()
-    return [{"id": c.id, "code": c.code, "name": c.name} for c in rows]
-
-
-@app.get("/fantasy-teams")
-def list_fantasy_teams(db: Session = Depends(get_db)):
-    rows = db.query(models.FantasyTeam).all()
-    claims = {c.fantasy_team_id: c.user_id for c in db.query(models.TeamClaim).all()}
-    tds = db.query(models.FantasyTeamDriver).all()
-    count_by_team: dict[str, int] = {}
-    for td in tds:
-        count_by_team[td.fantasy_team_id] = count_by_team.get(td.fantasy_team_id, 0) + 1
-    return [
-        {
-            "id": t.id,
-            "name": t.name,
-            "is_claimed": t.id in claims,
-            "drivers_count": count_by_team.get(t.id, 0),
-        }
-        for t in rows
-    ]
-
-
-@app.get("/weekends")
-def list_weekends(db: Session = Depends(get_db)):
-    now = datetime.utcnow()
-    rows = db.query(models.Weekend).order_by(models.Weekend.season.desc(), models.Weekend.round.desc()).all()
-    return [
-        {
-            "id": w.id,
-            "name": w.name,
-            "season": w.season,
-            "round": w.round,
-            "has_sprint": w.has_sprint,
-            "is_finalized": w.is_finalized,
-            "status": weekend_status(w, now),
-            "prediction_open_at": w.prediction_open_at,
-            "prediction_close_at": w.prediction_close_at,
-            "weekend_end_at": w.weekend_end_at,
-        }
-        for w in rows
-    ]
 
 
 def _assert_open(db: Session, weekend_id: str):
