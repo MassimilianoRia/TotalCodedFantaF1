@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+.venv/
+fantaf1.db

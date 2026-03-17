@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FantaF1</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>FantaF1</h1>
+    <p>Pannello unico utenti + admin</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Accesso</h2>
+      <div class="row">
+        <input id="email" placeholder="email" />
+        <input id="password" placeholder="password" type="password" />
+      </div>
+      <div class="row">
+        <button id="registerBtn">Registrati</button>
+        <button id="loginBtn">Login</button>
+        <button id="logoutBtn" class="ghost">Logout</button>
+      </div>
+      <p id="authStatus">Non autenticato</p>
+    </section>
+
+    <section class="grid">
+      <section class="card">
+        <h3>Utente</h3>
+        <button id="refreshMeBtn">Aggiorna profilo</button>
+        <pre id="meBox"></pre>
+      </section>
+
+      <section class="card">
+        <h3>Claim Team</h3>
+        <select id="teamSelect"></select>
+        <button id="claimBtn">Claim</button>
+      </section>
+
+      <section class="card">
+        <h3>Weekend & Predizioni</h3>
+        <select id="weekendSelect"></select>
+        <div class="pred-grid">
+          <label><input type="checkbox" id="pred_red_flag" /> Red flag</label>
+          <label><input type="checkbox" id="pred_safety" /> Safety/VSC</label>
+          <label><input type="checkbox" id="pred_wet" /> Wet tyres</label>
+          <label><input type="checkbox" id="pred_top2" /> Top2 stesso costruttore</label>
+          <label><input type="checkbox" id="pred_pole" /> Poleman vince</label>
+          <label><input type="checkbox" id="pred_dnf" /> Oltre 2 DNF/DNS</label>
+          <label>Costruttori con 2 in top10 <input type="number" min="0" max="5" id="pred_top10" value="0" /></label>
+        </div>
+        <div class="row">
+          <button id="savePredBtn">Salva predizione</button>
+          <button id="delPredBtn" class="ghost">Elimina predizione</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Capitano & Poop</h3>
+        <select id="captainDriverSelect"></select>
+        <button id="setCaptainBtn">Imposta capitano</button>
+        <div class="row">
+          <select id="poopBucket">
+            <option value="LE40"><= 40</option>
+            <option value="MID80">41..80</option>
+            <option value="GT80">> 80</option>
+          </select>
+          <button id="setPoopBtn">Salva poop prediction</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Admin rapido</h3>
+        <textarea id="adminPayload" rows="8" placeholder='JSON payload'></textarea>
+        <div class="row">
+          <select id="adminAction">
+            <option value="constructor">Upsert constructor</option>
+            <option value="driver">Upsert driver</option>
+            <option value="team">Create fantasy team</option>
+            <option value="weekend">Create weekend</option>
+          </select>
+          <button id="runAdminBtn">Esegui</button>
+        </div>
+        <p class="hint">Per funzioni avanzate (risultati, recompute, finalize) usa /docs.</p>
+      </section>
+    </section>
+
+    <section class="card">
+      <h3>Leaderboard</h3>
+      <button id="refreshLeaderboardBtn">Aggiorna</button>
+      <pre id="leaderboardBox"></pre>
+    </section>
+
+    <section class="card">
+      <h3>Log</h3>
+      <pre id="logBox"></pre>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
