@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FantaF1 - Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>FantaF1 Dashboard</h1>
+    <div class="row">
+      <span id="userBadge"></span>
+      <button id="logoutBtn" class="ghost">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <details open class="card">
+      <summary>Classifica</summary>
+      <button id="refreshLeaderboardBtn">Aggiorna classifica</button>
+      <pre id="leaderboardBox"></pre>
+    </details>
+
+    <details class="card">
+      <summary>Predizioni (gara + minigioco)</summary>
+      <select id="weekendSelect"></select>
+      <div class="pred-grid">
+        <label><input type="checkbox" id="pred_red_flag" /> Red flag</label>
+        <label><input type="checkbox" id="pred_safety" /> Safety/VSC</label>
+        <label><input type="checkbox" id="pred_wet" /> Wet tyres</label>
+        <label><input type="checkbox" id="pred_top2" /> Top2 stesso costruttore</label>
+        <label><input type="checkbox" id="pred_pole" /> Poleman vincitore</label>
+        <label><input type="checkbox" id="pred_dnf" /> Oltre 2 DNF/DNS</label>
+        <label>Costruttori con 2 in top10 <input id="pred_top10" type="number" min="0" max="5" value="0" /></label>
+      </div>
+      <div class="row">
+        <button id="savePredBtn">Salva predizione</button>
+        <button id="delPredBtn" class="ghost">Elimina predizione</button>
+      </div>
+      <div class="row">
+        <select id="poopBucket">
+          <option value="LE40"><= 40</option>
+          <option value="MID80">41..80</option>
+          <option value="GT80">> 80</option>
+        </select>
+        <button id="setPoopBtn">Salva minigioco</button>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Il tuo team</summary>
+      <div class="row">
+        <select id="teamSelect"></select>
+        <button id="claimBtn">Claim team</button>
+      </div>
+      <pre id="meBox"></pre>
+      <div class="row">
+        <select id="captainDriverSelect"></select>
+        <button id="setCaptainBtn">Imposta capitano</button>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Statistiche</summary>
+      <button id="refreshStatsBtn">Aggiorna stats</button>
+      <pre id="statsBox"></pre>
+    </details>
+
+    <details class="card" id="adminPanel" hidden>
+      <summary>Admin</summary>
+      <textarea id="adminPayload" rows="8" placeholder='JSON payload'></textarea>
+      <div class="row">
+        <select id="adminAction">
+          <option value="constructor">Upsert constructor</option>
+          <option value="driver">Upsert driver</option>
+          <option value="team">Create fantasy team</option>
+          <option value="weekend">Create weekend</option>
+        </select>
+        <button id="runAdminBtn">Esegui</button>
+      </div>
+      <p class="hint">Per import risultati, preflight, recompute e finalize usa /docs.</p>
+    </details>
+
+    <section class="card">
+      <h3>Log</h3>
+      <pre id="logBox"></pre>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>
