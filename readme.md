@@ -1,27 +1,20 @@
 # FantaF1
 
-Implementazione completa (MVP robusto) di backend API + frontend web per fantasy Formula 1.
+Implementazione completa (MVP robusto) di backend API per fantasy Formula 1.
 
 ## Stack
 - FastAPI
 - SQLAlchemy
 - SQLite (default, facilmente sostituibile)
 - JWT auth
-- Frontend vanilla HTML/CSS/JS servito da FastAPI
 
 ## Avvio
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python scripts/seed_demo.py   # facoltativo
 uvicorn app.main:app --reload
 ```
-
-Poi apri:
-- Login: `http://127.0.0.1:8000/`
-- Dashboard: `http://127.0.0.1:8000/app`
-- Swagger: `http://127.0.0.1:8000/docs`
 
 ## Funzionalità implementate
 - Anagrafica costruttori, piloti, team fantasy
@@ -34,18 +27,10 @@ Poi apri:
 - Preflight checks
 - Recompute weekend (punti pilota, team, poop)
 - Leaderboard fantasy (solo weekend finalizzati) + poop separata
-- Frontend a 2 pagine: login separato + dashboard con sezioni collassabili
-- Sezioni admin visibili solo a utenti admin
 
 ## Endpoint principali
 - `POST /auth/register`
 - `POST /auth/login`
-- `GET /me`
-- `GET /me/stats`
-- `GET /drivers`
-- `GET /constructors`
-- `GET /fantasy-teams`
-- `GET /weekends`
 - `POST /claim/{team_id}`
 - `PUT /weekends/{weekend_id}/predictions`
 - `PUT /weekends/{weekend_id}/captain`
@@ -57,5 +42,4 @@ Poi apri:
 - `GET /leaderboard`
 
 ## Note
-- Il pannello web copre i flussi principali utente/admin; per operazioni admin avanzate (upload risultati massivi e finalizzazione) resta disponibile `/docs`.
-- Repository pronto per estensioni (importer Jolpica, Postgres/Supabase, ruoli avanzati).
+Questo repository è pronto per estensioni (UI, importer Jolpica, Postgres/Supabase, RLS).
