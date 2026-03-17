@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FantaF1 - Login</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="centered">
+    <section class="card narrow">
+      <h1>FantaF1</h1>
+      <p>Accedi o registrati per entrare nel pannello.</p>
+      <label>Email</label>
+      <input id="email" type="email" placeholder="esempio@mail.com" />
+      <label>Password (min 6)</label>
+      <input id="password" type="password" placeholder="******" />
+      <div class="row">
+        <button id="loginBtn">Login</button>
+        <button id="registerBtn">Registrati</button>
+      </div>
+      <p class="hint">Se è il primo account creato, diventa admin.</p>
+      <pre id="messageBox"></pre>
+    </section>
+  </main>
+  <script src="/static/login.js"></script>
+</body>
+</html>
